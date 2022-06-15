@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { View, Text } from 'react-native'
 import { auth } from '../firebase'
 import * as Google from 'expo-auth-session/providers/google';
@@ -18,14 +18,12 @@ export const AuthProvider = ({ children }) => {
     const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
         clientId: "35429041629-fkf3ahrr1gktlfgdjd5rkvar0k56enaa.apps.googleusercontent.com",
     })
-
     useEffect(() => {
         setLoadingInitial(true)
         if (response?.type === 'success') {
             const { id_token } = response.params
             const credential = GoogleAuthProvider.credential(id_token)
             signInWithCredential(auth, credential)
-
         }
         if (response?.type === 'error') {
             (error) => {
@@ -36,7 +34,6 @@ export const AuthProvider = ({ children }) => {
             setLoadingInitial(false)
         }
     }, [response])
-
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -59,13 +56,14 @@ export const AuthProvider = ({ children }) => {
         })
     }
     // console.log(authentication)
-    const memoedValue = useMemo(() => (
-        { error, loadingInitial, promptAsync, user, logout }
-    )
-        , [user, loadingInitial, error])
+    // const memoedValue = useCallback(() => (
+    //     {  }
+    // )
+    //     , [user, loadingInitial, error])
+
 
     return (
-        <AuthContext.Provider value={memoedValue}>
+        <AuthContext.Provider value={{ error, loadingInitial, user, logout, promptAsync }}>
             {!loadingInitial && children}
         </AuthContext.Provider>
     )
