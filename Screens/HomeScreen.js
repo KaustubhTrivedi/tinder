@@ -1,6 +1,6 @@
 // React and RN specefic imports
 import { View, Text, Button, SafeAreaView, TouchableOpacity, Image, StyleSheet } from 'react-native'
-import React, { useLayoutEffect, useRef } from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 // React Navigation imports
 import { useNavigation } from '@react-navigation/native'
 // Auth imports
@@ -17,6 +17,8 @@ const HomeScreen = () => {
   const navigation = useNavigation()
   const { user, logout } = useAuth()
   const swipeRef = useRef()
+
+  const [profiles, setProfiles] = useState()
 
   return (
     <SafeAreaView style={tw`flex-1 mt-6`}>
@@ -57,7 +59,7 @@ const HomeScreen = () => {
           onSwipedRight={() => {
             console.log("Matched")
           }}
-          cards={data}
+          cards={profiles}
           overlayLabels={
             {
               left: {
